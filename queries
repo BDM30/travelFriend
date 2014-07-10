@@ -15,3 +15,6 @@ http://overpass-api.de/api/interpreter?data=[out:json]; node["is_in:country_code
 
 Границы города:
 http://overpass-api.de/api/interpreter?data=[out:json];(rel[name='Helsinki'];>;);out;
+
+сайт для перевода запросов:
+http://overpass-api.de/query_form.html
