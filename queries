@@ -21,3 +21,50 @@ http://overpass-api.de/query_form.html
 
 сайт для обработки  запросов
 http://overpass-turbo.eu
+
+for JOSM:
+[maxsize:10230000]
+[timeout:120]
+;
+area
+  ["boundary"="administrative"]
+  ["name"="Калининградская область"]
+->.a;
+(
+  relation
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+  way
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+  node
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+);
+(._;rel(bn););
+(._;rel(bw););
+(._;rel(br););
+out meta qt;
+for other:
+[maxsize:10230000]
+[timeout:120]
+;
+area
+  ["boundary"="administrative"]
+  ["name"="Калининградская область"]
+->.a;
+(
+  relation
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+  way
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+  node
+    (area.a)
+    ["place"~"isolated_dwelling|hamlet|village|town|city|suburb"];>;
+);
+(._;rel(bn););
+(._;rel(bw););
+(._;rel(br););
+out meta qt;
