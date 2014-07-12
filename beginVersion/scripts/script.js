@@ -79,7 +79,8 @@
   function placeMarker(place) {
     var markerOptions = {
       map: map,
-      position: place
+      position: place,
+      draggable: true
     }
     var marker = new google.maps.Marker(markerOptions);
 
