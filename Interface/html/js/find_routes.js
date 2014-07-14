@@ -16,7 +16,7 @@
 		var one = document.getElementById("inp0");
 		if (one.value == "input adress") {
 			one.value="";
-			style="color:black";
+			one.style="color:black";
 		}
    }
    
@@ -25,6 +25,7 @@
 	var one = document.getElementById("inp1");
 	if (one.value == "input adress") {
 			one.value="";
+			one.style="color:black";
 	}
    }
    
