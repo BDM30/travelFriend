@@ -1,9 +1,22 @@
+	function changeTypeTravel() {
+		var one = document.getElementById("sel");
+		var two = document.getElementById("fra");
+		if (one.value == "once") {
+			fra.src="html/once_travel.html";
+		}
+		else {
+			if (one.value == "every day/week") {
+				fra.src="html/every_travel.html";
+			}
+		}
+	}
+	
 	function clearInputOne() {
 		alert("pressed input");
 		var one = document.getElementById("inp0");
 		if (one.value == "input adress") {
 			one.value="";
-			one.style="color:black";
+			style="color:black";
 		}
    }
    
@@ -12,7 +25,6 @@
 	var one = document.getElementById("inp1");
 	if (one.value == "input adress") {
 			one.value="";
-			one.style="color:black";
 	}
    }
    

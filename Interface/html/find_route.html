@@ -16,9 +16,7 @@
 
 
 <form action="file.php" method="POST" enctype="multipart/form-data">
-
 <table>
-
 	<tr>
 	<td>
 	travel from:<br>
@@ -52,7 +50,7 @@
 	Range of searching
 	</td>
 	<td>
-	<select>
+	<select onchange="changeTypeTravel()" id="sel">
 		<option>every day/week</option>
 		<option>once</option>
 		<option>all</option>
@@ -60,11 +58,14 @@
 	Type of travel
 	</td>
 	</tr>
-	
-	
+		
 </table>
-
 </form>
+
+<iframe id="fra" noresize scrolling="no" frameborder="0" id="fr" width="1200"
+height="800">
+
+</iframe>
 
 
 </body>
