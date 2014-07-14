@@ -5,11 +5,11 @@
 <head>
 <title> Main am I</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<script src="main_scriptPanel.js"></script>  
+<script src="js/main_scriptPanel.js"></script>  
 
-<link rel="stylesheet" href="css/reset.css">
-<link rel="stylesheet" href="css/animate.css">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="cs/reset.css">
+<link rel="stylesheet" href="cs/animate.css">
+<link rel="stylesheet" href="cs/styles.css">
 
 </head>
   
@@ -20,23 +20,24 @@
   
 <tr>
   
+
   <td name="Find route">
     <input type="button" value="Find route" onclick="findRouteFunction()">
   </td>
   <td name="Add route">
-    <input type="button" value="Add route">
+    <input type="button" value="Add route" onclick="addRouteFunction()">
   </td>
   <td name="My routes">
-    <input type="button" value="My routes">
+    <input type="button" value="My routes" onclick="myRoutesFunction()">
   </td>
   <td name="My profile"> 
-    <input type="button" value="My profile">
+    <input type="button" value="My profile" onclick="myProfileFunction()">
   </td>
   <td name="My Settings"> 
-    <input type="button" value="My Settings">
+    <input type="button" value="My Settings" onclick="mySettingsFunction()">
   </td>
   <td name="Help me"> 	
-    <input type="button" value="Help me">
+    <input type="button" value="Help me" onclick="helpMeFunction()">
   </td>
   
 </tr>
@@ -44,7 +45,8 @@
 </table>  
   
   
-<iframe src="html/index.html" noresize scrolling="no" frameborder="0" id="fr">
+<iframe src="index.html" noresize scrolling="no" frameborder="0" id="fr" width="600"
+height="800">
 </iframe>
 </body>
   
