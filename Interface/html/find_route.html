@@ -1,0 +1,73 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  
+<title>Find route</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="js/find_routes.js"></script>  
+</head>
+  
+<body>
+
+
+  
+<strong> Find route</strong>
+
+
+<form action="file.php" method="POST" enctype="multipart/form-data">
+<table>
+	<tr>
+	<td>
+	travel from:<br>
+	<input type="text" name="wayOut" value="input adress" onclick="clearInputOne()" id="inp0" style="color:grey"><br>
+	</td>
+	<td>
+	travel to:<br>
+	<input type="text" name="wayIn" value="input adress" onclick="clearInputTwo()" id="inp1" style="color:grey"><br>
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<input type="checkbox" onchange="inputOneState()" id="ch1">
+	  random departure
+	</td>
+	<td>
+	<input type="checkbox" onchange="inputTwoState()" id="ch2">
+	  random destination
+	</td>
+	</tr>
+	
+	<tr>
+	<td>
+	<select>
+		<option>1 km</option>
+		<option>5 km</option>
+		<option>10 km</option>
+		<option>30 km</option>
+	</select>
+	Range of searching
+	</td>
+	<td>
+	<select onchange="changeTypeTravel()" id="sel">
+		<option>every day/week</option>
+		<option>once</option>
+		<option>all</option>
+	</select>
+	Type of travel
+	</td>
+	</tr>
+		
+</table>
+</form>
+
+<iframe id="fra" noresize scrolling="no" frameborder="0" id="fr" width="1200"
+height="800">
+
+</iframe>
+
+
+</body>
+  
+</html>
