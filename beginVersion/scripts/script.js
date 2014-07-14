@@ -12,7 +12,7 @@
     	message: null
   	};
 
-  	window.onload = function (map1) 
+  	window.onload = function () 
     {
     	var mapOptions = {
       		center: new google.maps.LatLng(60.0, 30.3),
