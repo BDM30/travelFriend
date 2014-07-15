@@ -1,6 +1,27 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-#include "QVector"
+#include <iostream>
+
+using namespace std;
+
+int const amount = 1000;
+
+class Node {
+public:
+    void set(QString id1, double lat1, double lon1) {
+       id = id1;
+       lat = lat1;
+       lon = lon1;
+    }
+    Node()
+    {
+
+    }
+    QString id;
+    double lat;
+    double lon;
+};
+
 
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
@@ -33,26 +54,25 @@ void Dialog::slotReadyRead()
 
 void Dialog::parseXml()
 {
-    QString idsNode[508];
+    Node arrayNodes[amount];
     int curId = 0;
-    int c = 0;
     while (!xmlReader.atEnd())
         {
          xmlReader.readNext();
          QStringRef token = xmlReader.name();
-         ui->textEdit->append("c = " + QString::number(c));
-         ui->textEdit->append(xmlReader.name().toString());
          QXmlStreamAttributes attrib = xmlReader.attributes();
          if (token == "node") {
              QString one = attrib.value("id").toString();
+             double two = attrib.value("lat").toDouble();
+             double three = attrib.value("lon").toDouble();
              if (one != "")
              {
-                idsNode[curId] = one;
+                arrayNodes[curId].set(one,two,three);
                 curId++;
              }
          }
         }
     for (int i = 0; i < curId; i++) {
-        ui->textEdit->append(idsNode[i]);
+        ui->textEdit->append(arrayNodes[i].id+ " " + QString::number(arrayNodes[i].lat) + " " + QString::number(arrayNodes[i].lon));
     }
 }

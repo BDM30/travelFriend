@@ -21,7 +21,7 @@ public:
 private slots:
     void slotReadyRead();
 
-private:
+public:
     void parseXml();
 
     Ui::Dialog *ui;
