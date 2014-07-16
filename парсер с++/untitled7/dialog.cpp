@@ -34,12 +34,31 @@ public:
     Way()
     {
         amountNodes = 0;
-        //QString *nodes = new QString[amount]();
+        nodes = new QString[amount]();
     }
     QString id;
-    QString nodes[amount];
-    //QString *nodes;
+    //QString nodes[amount];
+    QString *nodes;
     int amountNodes;
+};
+
+class Relation {
+public:
+    void setId(QString input) {
+         id = input;
+    }
+    void setWay(QString input) {
+        ways[amountWays] = input;
+        amountWays++;
+    }
+
+    Relation() {
+        amountWays = 0;
+        ways = new QString[amount]();
+    }
+    QString id;
+    QString *ways;
+    int amountWays;
 };
 
 
@@ -51,7 +70,10 @@ Dialog::Dialog(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->loadButton->setEnabled(false);
-    networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Новозыбков'];>;);out;")));
+
+    //networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Новозыбков'];>;);out;")));
+    networkReply = manager->get(QNetworkRequest(QUrl("C:\js\file.xml")));
+    //networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=area[%22boundary%22=%22administrative%22][%22name%22=%22%D0%A1%D0%B0%D0%BD%D0%BA%D1%82-%D0%9F%D0%B5%D1%82%D0%B5%D1%80%D0%B1%D1%83%D1%80%D0%B3%22]-%3E.a;%28relation%28area.a%29[%22admin_level%22=%225%22];%29;out%20body;%3E;out%20skel%20qt;")));
     connect(networkReply, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
 
 }
@@ -75,14 +97,17 @@ void Dialog::slotReadyRead()
 
 void Dialog::parseXml()
 {
-    //Node arrayNodes[amount];
     Node *arrayNodes = new Node[amount]();
     int amountNodes = 0;
 
-    long counter = 0; // следит за открытием\закрытием тега way
+    long counterWays = 0; // следит за открытием\закрытием тега way
     long amountWays = 0;
-    //Way arrayWays[amount];
     Way *arrayWays = new Way[amount]();
+
+    long counterRelations = 0; //  следит за открытием\закрытием тега relation
+    long amountRelations = 0;
+    Relation *arrayRelations = new Relation[amount/10]();
+
 
     while (!xmlReader.atEnd())
         {
@@ -99,8 +124,9 @@ void Dialog::parseXml()
                 amountNodes++;
              }
          }
+
          if (token == "way") {
-                      if (counter % 2 == 0) { // тег way открылся
+                      if (counterWays % 2 == 0) { // тег way открылся
                           QString one = attrib.value("id").toString();
                           arrayWays[amountWays].setId(one);
                       }
@@ -108,16 +134,37 @@ void Dialog::parseXml()
                           amountWays++;
                       }
                       ui->textEdit->append("\nway\n");
-                      counter++;
-          }
-         if (counter % 2 == 1 && token == "nd") {
+                      counterWays++;
+         }
+         if (counterWays % 2 == 1 && token == "nd") {
              QString one = attrib.value("ref").toString();\
              if (one != "") {
                 arrayWays[amountWays].setNode(one);
              }
          }
+
+         if (token == "relation") {
+
+             if (counterRelations % 2 == 0) { // тег relation открылся
+                 QString one = attrib.value("id").toString();
+                 arrayRelations[amountRelations].setId(one);
+             }
+             else { // тег relation закрылся
+                 amountRelations++;
+             }
+             counterRelations++;
+         }
+         if (counterRelations % 2 == 1 && token == "member") {
+             QString one = attrib.value("ref").toString();
+             QString two = attrib.value("type").toString();
+             if (one != "" && two== "way") {
+                arrayRelations[amountRelations].setWay(one);
+             }
+         }
+
         }
     // тестовый вывод
+
     for (int i = 0; i < amountNodes; i++) {
         ui->textEdit->append(arrayNodes[i].id+ " " + QString::number(arrayNodes[i].lat) + " " + QString::number(arrayNodes[i].lon));
     }
@@ -127,4 +174,9 @@ void Dialog::parseXml()
     for (int i = 0; i < arrayWays[0].amountNodes; i++) {
         ui->textEdit->append(" " + arrayWays[0].nodes[i] + " ");
     }
+
+    for (int i = 0; i < arrayRelations[0].amountWays; i++) {
+        ui->textEdit->append(" " + arrayRelations[0].ways[i] + " ");
+    }
+
 }
