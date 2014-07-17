@@ -1,10 +1,5 @@
 #include "dialog.h"
 #include "ui_dialog.h"
-#include "list.h"
-#include "node.cpp"
-#include "way.cpp"
-#include <relation.cpp>
-#include <iostream>
 
 using namespace std;
 
@@ -21,6 +16,9 @@ Dialog::Dialog(QWidget *parent) :
     networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Новозыбков'];>;);out;")));
     connect(networkReply, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
 
+    listNodes = new List<Node>();
+    listWays = new List<Way>();
+    arrayRelations = new Relation[amount/10]();
 }
 
 Dialog::~Dialog()
@@ -40,59 +38,66 @@ void Dialog::slotReadyRead()
         }
 }
 
-void Dialog::parseXml()
+int Dialog::parseXml()
 {
 
-    List<Node> *listNodes = new List<Node>();
+
     int amountNodes = 0;
 
     long counterWays = 0; // следит за открытием\закрытием тега way
     long amountWays = 0;
-    List<Way> *listWays = new List<Way>();
+
 
     long counterRelations = 0; //  следит за открытием\закрытием тега relation
     long amountRelations = 0;
-    Relation *arrayRelations = new Relation[amount/10]();
 
-    Way headWay;
+
+    Way *headWay = new Way();
     listWays->push(headWay);
-
     while (!xmlReader.atEnd())
         {
          xmlReader.readNext();
          QStringRef token = xmlReader.name();
          QXmlStreamAttributes attrib = xmlReader.attributes();
          if (token == "node") {
-             Node slot;
-             slot.set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
+             Node *slot = new Node();
+             slot->set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
+             //ui->textEdit->append("fixing\n");
+             //ui->textEdit->append(slot->id);
+             //ui->textEdit->append(QString::number(slot->lat));
+            // ui->textEdit->append(QString::number(slot->lon));
+             //return 1;
              if (attrib.value("id").toString() != "")
              {
+                //ui->textEdit->append("fixing\n");
                 listNodes->push(slot);
                 amountNodes++;
              }
          }
-         //Way *headWay = new Way();
+         Way *headWay = new Way();
          //Way headWay;
-         //listWays->push(headWay);
+         listWays->push(headWay);
 
          if (token == "way") {
              //cout << " 1\n";
+             //ui->textEdit->append("found out <way>");
                       if (counterWays % 2 == 0) { // тег way открылся
-                          QString one = attrib.value("id").toString();
+                          //ui->textEdit->append("found out <way> is open");
+                          //QString one = attrib.value("id").toString();
                           listWays->end->value.setId(attrib.value("id").toString());
                           //cout << listWays->end->value.id.toStdString() << endl;
                       }
                       else { // тег way закрылся
                           //cout << "closed\n";
-                          Way slot;
+                          Way *slot = new Way();
                           listWays->push(slot);
                           amountWays++;
                       }
                       counterWays++;
          }
          if (counterWays % 2 == 1 && token == "nd") {
-             QString one = attrib.value("ref").toString();
-             if (one != "") {
+             QString *one = new QString(attrib.value("ref").toString());
+             if (*one != "") {
                  listWays->end->value.setNode(one);
                  //cout << listWays->end->value.nodes->end->value.toStdString() << endl;
              }
@@ -132,6 +137,7 @@ void Dialog::parseXml()
 
 
 
+
     /*
     while (listNodes->begin) {
         Node slot = listNodes->begin->value;
@@ -140,6 +146,8 @@ void Dialog::parseXml()
     }
     */
 
+
+    /*
     while (listWays->begin) {
         Way slot = listWays->begin->value;
         while(slot.nodes->begin) {
@@ -147,7 +155,10 @@ void Dialog::parseXml()
             cout << ke.toStdString() << endl;
             slot.nodes->begin = slot.nodes->begin->next;
         }
+        listWays->begin = listWays->begin->next;
     }
+    */
 
 
+return 0;
 }

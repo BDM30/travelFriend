@@ -4,8 +4,8 @@ class List {
 public:
 
     struct Elements {
-        Elements(T value1) {
-            value = value1;
+        Elements(T *value1) {
+            value = *value1;
             next = NULL;
         }
 
@@ -33,7 +33,7 @@ public:
         }
         return NULL;
     }
-    void push(T value) {
+    void push(T *value) {
         if (end == NULL) {
             end = new Elements(value);
             begin = end;

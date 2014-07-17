@@ -6,6 +6,12 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QXmlStreamReader>
+#include "list.h"
+#include "node.cpp"
+#include "way.cpp"
+#include <relation.cpp>
+#include <iostream>
+
 
 namespace Ui {
 class Dialog;
@@ -22,12 +28,20 @@ private slots:
     void slotReadyRead();
 
 public:
-    void parseXml();
+    int parseXml();
 
     Ui::Dialog *ui;
     QNetworkAccessManager *manager;
+
     QNetworkReply *networkReply;
     QXmlStreamReader xmlReader;
+
+    List<Node> *listNodes;
+    List<Way> *listWays;
+    List<Relation> *listRelations;
+    Relation *arrayRelations;
+
+
 };
 
 #endif // DIALOG_H

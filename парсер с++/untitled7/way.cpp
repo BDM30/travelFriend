@@ -4,7 +4,7 @@
 
 class Way {
 public:
-    void setNode(QString input) {
+    void setNode(QString *input) {
         nodes->push(input);
         amountNodes++;
     }
