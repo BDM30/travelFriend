@@ -17,7 +17,7 @@ Dialog::Dialog(QWidget *parent) :
     ui->setupUi(this);
     ui->loadButton->setEnabled(false);
 
-    networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Кемерово'];>;);out;")));
+    networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Прокопьевск'];>;);out;")));
     connect(networkReply, SIGNAL(finished()), this, SLOT(slotReadyRead()));
 
     listNodes = new List<Node>();
@@ -50,6 +50,7 @@ void Dialog::slotReadyRead()
             QTextCodec *codec = QTextCodec::codecForName("Windows-1251");
             xmlReader.addData(codec->toUnicode(data));
             parseXml();
+            outPut();
         }
 }
 
@@ -154,18 +155,21 @@ int Dialog::parseXml()
     }
     */
 
-
     /*
     while (listWays->begin) {
+
         Way slot = listWays->begin->value;
         while(slot.nodes->begin) {
             QString ke = slot.nodes->begin->value;
             cout << ke.toStdString() << endl;
             slot.nodes->begin = slot.nodes->begin->next;
         }
+
         listWays->begin = listWays->begin->next;
     }
     */
+
+
 
     /*
     while (listRelations->begin) {
@@ -179,5 +183,43 @@ int Dialog::parseXml()
     }
     */
 
+
 return 0;
+}
+
+void Dialog::outPut() {
+    QString currentWay = ""; // текущий путь из Relation
+    QString shapeBegin = ""; // начало контура
+    QString shapeEnd = ""; // конец контура
+    while (listRelations->begin) { // идем по всем Relations
+        //ui->textEdit->append("here");
+        if (currentWay == "") { // если начальный путь не выбран выбираем его (берем первый)
+            Relation slotR = listRelations->begin->value;
+            currentWay = slotR.ways->begin->value;
+            // затем его надо удалить из списка путей этого Relation
+            slotR.ways->remove(currentWay);
+            // теперь найдем его в общем списке путей
+            Way slotW = findWayById(currentWay);
+            // получим конец и начало нашего строящегося полигона
+            shapeBegin = slotW.nodes->begin->value;
+            shapeEnd = slotW.nodes->end->value;
+            // если путь и есть контур, идем раньше
+            if (shapeBegin == shapeEnd) {
+                // полигон = все точки Way с id = currentWay
+            }
+        }
+        else
+            // теперь нужно среди оставшихся путей Relation выбрать те, кто имеет общее (начало || конец) с построенным
+        {
+
+        }
+        listRelations->begin = listRelations->begin->next;
+        break;
+    }
+
+    ofstream outFile;
+    //QString test="V la Dick!";
+    outFile.open("hard.html", ios::out);
+    //outFile << test.toStdString();
+    outFile.close();
 }

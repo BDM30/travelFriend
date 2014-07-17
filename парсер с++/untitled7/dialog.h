@@ -11,7 +11,7 @@
 #include "way.cpp"
 #include <relation.cpp>
 #include <iostream>
-
+#include <fstream>
 
 namespace Ui {
 class Dialog;
@@ -29,6 +29,17 @@ private slots:
 
 public:
     int parseXml();
+    void outPut();
+
+    Way findWayById(QString idS) {
+        while (listWays->begin) {
+            if (listWays->begin->value.id == idS )
+                return listWays->begin->value;
+            listWays->begin = listWays->begin->next;
+        }
+        Way slot;
+        return slot;
+    }
 
     Ui::Dialog *ui;
     QNetworkAccessManager *manager;

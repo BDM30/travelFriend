@@ -1,4 +1,5 @@
 #pragma once
+
 template <typename T>
 class List {
 public:
@@ -12,6 +13,9 @@ public:
         T value;
         Elements *next;
     };
+    T *searchId() {
+
+    }
 
     List() {
         end = NULL;
@@ -44,16 +48,16 @@ public:
             end = end->next;
         }
     }
-    void remove(T key) {
+    int remove(T key) {
        Elements *slot = find(key);
        if (!slot)
-           return;
+           return 1;
        Elements *previous = begin;
        if (end == begin) {
            delete end;
            end = NULL;
            begin = NULL;
-           return;
+           return 0;
        }
        while (previous) {
            if (previous->next == slot)
@@ -65,20 +69,22 @@ public:
            Elements *memory = begin;
            begin = begin->next;
            delete memory;
+           return 0;
        }
        else {
             if (slot == end) {
                 end = previous;
                 end->next = NULL;
                 delete slot;
+                return 0;
             }
             else {
                 previous->next = slot ->next;
                 delete slot;
+                return 0;
             }
        }
-
-
+    return 1;
     }
 
     Elements *begin;
