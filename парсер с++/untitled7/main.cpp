@@ -1,7 +1,8 @@
 #include "dialog.h"
 #include <QApplication>
 
-// создать отдельный проход где будут создавать голые элементы и списки Ways и Relations
+// parseXml() = берет кусками, это плохо. Исправить!!!
+// Пример Прокопьевска = 167/2/1
 
 int main(int argc, char *argv[])
 {

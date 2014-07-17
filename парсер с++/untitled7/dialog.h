@@ -39,8 +39,10 @@ public:
     List<Node> *listNodes;
     List<Way> *listWays;
     List<Relation> *listRelations;
-    Relation *arrayRelations;
 
+    long amountNodes;
+    long amountWays;
+    long amountRelations;
 
 };
 

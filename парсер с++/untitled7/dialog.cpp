@@ -8,18 +8,31 @@ int const amount = 15000;
 Dialog::Dialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::Dialog),
-    manager(new QNetworkAccessManager(this))
+    manager(new QNetworkAccessManager(this)),
+    amountNodes(0),
+    amountWays(0),
+    amountRelations(0)
 {
+
     ui->setupUi(this);
     ui->loadButton->setEnabled(false);
 
-    networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Новозыбков'];>;);out;")));
-    connect(networkReply, SIGNAL(readyRead()), this, SLOT(slotReadyRead()));
+    networkReply = manager->get(QNetworkRequest(QUrl("http://overpass-api.de/api/interpreter?data=(rel[name='Кемерово'];>;);out;")));
+    connect(networkReply, SIGNAL(finished()), this, SLOT(slotReadyRead()));
 
     listNodes = new List<Node>();
     listWays = new List<Way>();
     listRelations = new List<Relation>();
-    arrayRelations = new Relation[amount/10]();
+
+    Node *headNode = new Node();
+    listNodes->push(headNode);
+
+    Way *headWay = new Way();
+    listWays->push(headWay);
+
+
+    Relation *headRel = new Relation();
+    listRelations->push(headRel);
 }
 
 Dialog::~Dialog()
@@ -29,6 +42,7 @@ Dialog::~Dialog()
 
 void Dialog::slotReadyRead()
 {
+     ui->textEdit->append("slot used\n");
     int statusCode = networkReply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt();
         if (statusCode >= 200 && statusCode < 300)
         {
@@ -43,34 +57,33 @@ int Dialog::parseXml()
 {
 
 
-    int amountNodes = 0;
-
     long counterWays = 0; // следит за открытием\закрытием тега way
-    long amountWays = 0;
-
-
     long counterRelations = 0; //  следит за открытием\закрытием тега relation
-    long amountRelations = 0;
 
 
-    Way *headWay = new Way();
-    listWays->push(headWay);
+
+
     while (!xmlReader.atEnd())
         {
          xmlReader.readNext();
          QStringRef token = xmlReader.name();
          QXmlStreamAttributes attrib = xmlReader.attributes();
          if (token == "node") {
-             Node *slot = new Node();
-             slot->set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
-             if (attrib.value("id").toString() != "")
+             if (listNodes->begin) {
+                Node *slot = new Node();
+                slot->set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
+                if (attrib.value("id").toString() != "")
+                {
+                    listNodes->push(slot);
+                    amountNodes++;
+                }
+             }
+             else
              {
-                listNodes->push(slot);
-                amountNodes++;
+                 listNodes->begin->value.set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
+                 amountNodes++;
              }
          }
-         Way *headWay = new Way();
-         listWays->push(headWay);
 
          if (token == "way") {
                       if (counterWays % 2 == 0) { // тег way открылся
@@ -90,8 +103,6 @@ int Dialog::parseXml()
              }
          }
 
-         Relation *headRel = new Relation();
-         listRelations->push(headRel);
 
          if (token == "relation") {
 
@@ -117,6 +128,12 @@ int Dialog::parseXml()
     }
     // тестовый вывод
 
+
+    ui->textEdit->append("check sum\n");
+    ui->textEdit->append("amount nodes "+QString::number(amountNodes));
+    ui->textEdit->append("amount ways " + QString::number(amountWays));
+    ui->textEdit->append("amount relation "+QString::number(amountRelations ));
+    ui->textEdit->append("=====================");
     /*
     cout << "check sum\n";
     cout << "amount nodes" << amountNodes << endl;
@@ -124,6 +141,7 @@ int Dialog::parseXml()
     cout << "amount relation" << amountRelations << endl;
     cout <<"=====================" << endl;
     */
+
 
 
 
@@ -149,7 +167,7 @@ int Dialog::parseXml()
     }
     */
 
-
+    /*
     while (listRelations->begin) {
         Relation slot = listRelations->begin->value;
         while(slot.ways->begin) {
@@ -159,8 +177,7 @@ int Dialog::parseXml()
         }
         listRelations->begin = listRelations->begin->next;
     }
-
-
+    */
 
 return 0;
 }
