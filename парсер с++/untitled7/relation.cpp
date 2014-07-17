@@ -4,8 +4,8 @@
 
 class Relation {
 public:
-    void setId(QString *input) {
-         id = *input;
+    void setId(QString input) {
+         id = input;
     }
     void setWay(QString *input) {
         ways->push(input);

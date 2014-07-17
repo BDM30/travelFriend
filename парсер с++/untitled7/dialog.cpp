@@ -18,6 +18,7 @@ Dialog::Dialog(QWidget *parent) :
 
     listNodes = new List<Node>();
     listWays = new List<Way>();
+    listRelations = new List<Relation>();
     arrayRelations = new Relation[amount/10]();
 }
 
@@ -62,33 +63,20 @@ int Dialog::parseXml()
          if (token == "node") {
              Node *slot = new Node();
              slot->set(attrib.value("id").toString(),attrib.value("lat").toDouble(), attrib.value("lon").toDouble());
-             //ui->textEdit->append("fixing\n");
-             //ui->textEdit->append(slot->id);
-             //ui->textEdit->append(QString::number(slot->lat));
-            // ui->textEdit->append(QString::number(slot->lon));
-             //return 1;
              if (attrib.value("id").toString() != "")
              {
-                //ui->textEdit->append("fixing\n");
                 listNodes->push(slot);
                 amountNodes++;
              }
          }
          Way *headWay = new Way();
-         //Way headWay;
          listWays->push(headWay);
 
          if (token == "way") {
-             //cout << " 1\n";
-             //ui->textEdit->append("found out <way>");
                       if (counterWays % 2 == 0) { // тег way открылся
-                          //ui->textEdit->append("found out <way> is open");
-                          //QString one = attrib.value("id").toString();
                           listWays->end->value.setId(attrib.value("id").toString());
-                          //cout << listWays->end->value.id.toStdString() << endl;
                       }
                       else { // тег way закрылся
-                          //cout << "closed\n";
                           Way *slot = new Way();
                           listWays->push(slot);
                           amountWays++;
@@ -99,30 +87,32 @@ int Dialog::parseXml()
              QString *one = new QString(attrib.value("ref").toString());
              if (*one != "") {
                  listWays->end->value.setNode(one);
-                 //cout << listWays->end->value.nodes->end->value.toStdString() << endl;
              }
          }
 
-         /*
+         Relation *headRel = new Relation();
+         listRelations->push(headRel);
+
          if (token == "relation") {
 
              if (counterRelations % 2 == 0) { // тег relation открылся
-                 QString one = attrib.value("id").toString();
-                 arrayRelations[amountRelations].setId(one);
+                 listRelations->end->value.setId(attrib.value("id").toString());
              }
              else { // тег relation закрылся
-                 amountRelations++;
+                          Relation *slot = new Relation();
+                          listRelations->push(slot);
+                          amountRelations++;
              }
              counterRelations++;
          }
-         if (counterRelations % 2 == 1 && token == "member") {
-             QString one = attrib.value("ref").toString();
-             QString two = attrib.value("type").toString();
-             if (one != "" && two== "way") {
-                arrayRelations[amountRelations].setWay(one);
+         if (counterRelations % 2 == 1 && token == "member" && attrib.value("type").toString() == "way") {
+
+             QString *one = new QString(attrib.value("ref").toString());
+             if (*one != "") {
+                 listRelations->end->value.setWay(one);
              }
          }
-         */
+
 
     }
     // тестовый вывод
@@ -158,6 +148,18 @@ int Dialog::parseXml()
         listWays->begin = listWays->begin->next;
     }
     */
+
+
+    while (listRelations->begin) {
+        Relation slot = listRelations->begin->value;
+        while(slot.ways->begin) {
+            QString ke = slot.ways->begin->value;
+            cout << ke.toStdString() << endl;
+            slot.ways->begin = slot.ways->begin->next;
+        }
+        listRelations->begin = listRelations->begin->next;
+    }
+
 
 
 return 0;
