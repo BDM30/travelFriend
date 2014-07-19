@@ -1,103 +1,50 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	 
-		<title> Конвертор валют </title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+		<title> Changing of currency </title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
-		<script type="text/javascript" src="js/jquery-1.11.1.min.js"> </script>
+		<script type = "text/javascript" src = "js/jquery-1.11.1.min.js"> </script>
+		<script type = "text/javascript" src = "js/currency.js"> </script>
 	</head>
-	
-    <body> 
-	<script>			
-		$(document).ready(function () {
-			$.ajax({
-				type: "GET",
-				url: "xml/Course_Valute_02-07-2014.xml",
-				dataType: "xml",
-				success: xmlParser
-			});
-					
-			function xmlParser(xml) {
-				
-				$("#load").fadeOut();
-				
-				$(xml).find("Valute").each(function() {
-					$("#outputListValutes").append("<option value=" + $(this).find("CharCode").text() + ">" + $(this).find("CharCode").text() + "</option>");
-				});		
-			};
-		
-			$("#clear").click(function() {
-				var sumValue = document.getElementById("sum").value = "";
-				var resValue = document.getElementById("result").value = "";
-			});
-		
-			$("#convert").click(function() {
-				var shortName = $("#inputListValutes").val();			
-				$.get("xml/Course_Valute_02-07-2014.xml", findDate, "xml");	
-			});	
-			
-			function findDate(xml) {			
-				try{
-					var shortName = $("#outputListValutes").val();												
-					var value = $("#sum").val();
-					if(value == "") throw new Error("Empty value");
-					else if(value < 0) throw new Error("Value isn't to be below zero");
-					else if(isNaN(parseFloat(value))) throw new Error("Value isn't to be as symbols");
-					
-						$(xml).find("Valute").each(function() {															
-							if(shortName == $(this).find("CharCode").text()) {
-								var nominal = $(this).find("Nominal").text();
-								var course = $(this).find("Value").text();	
-								var result = parseFloat(value) * parseFloat(nominal) / parseFloat(course);									
-								document.getElementById("result").value = Number(result).toFixed(2);
-							}			
-						});
-				}
-				catch(e) {
-					alert(e);
-				}	
-			} 
-		});			
-	</script>
-	
-  	<div class="mainBlock"> 
-    	<!--This is exchange of rubles, according to avarange course of CBR -->  
-		<div class="inputValuteBlock">
-			<p> 
-				Your valute
+
+	<body>
+	<div class="mainBlock">
+		<!--This is exchange of rubles, according to avarange course of CBR -->
+		<div class="inputCurrencyBlock">
+			<p>
+				Your currency
 				<br>
-					<select id="inputListValutes">
+					<select id="inputListCurrency">
 						<option disabled selected> RUR </option>
 					</select>
-				 </br>
-				 To input sum    	
+				</br>
+				To input sum
 				<input type="text" id="sum" value="">  
-            </p>
+			</p>
 			
 			<p>
 				<input type="button" id="convert" value="Calculate">
 				<input type="reset" id="clear" value="Clear">
 			</p>
 		</div>
-		
-		<div class="outputValuteBlock">
+
+		<div class="outputCurrencyBlock">
 			<p>
 				To convert into
-				<select id="outputListValutes">
-					<option disabled> To chose the valute </option>
+				<select id="outputListCurrency">
+					<option disabled> To chose the currency </option>
 				</select>
-				
+
 				The result
 				<input type="text" id="result" value=""> 
-				
-				
-			</p>
 
-				
+			</p>
+		
 		</div>
 	
-    </div>
-    
-  </body>
-  
+	</div>
+
+	</body>
+
 </html>
